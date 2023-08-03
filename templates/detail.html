@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1">{{ article.title }}</h1>
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2"> {{ article.author }} tarafından {{ article.created_date }} tarihinde oluşturuldu.</div>
+                <hr>
+            </header>
+            <!-- Preview image figure-->
+            {% if article.article_image %}
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt="..." /></figure>
+            {% endif %}
+            
+            <!-- Post content-->
+            <section class="mb-5">
+                <p>
+                    <hr>
+                    {{ article.content|safe }}
+                    <hr>
+                </p>
+            </section>
+        </article>
+    </div>
+</div>
+<!-- Comments section-->
+<section class="mb-5">
+    <div class="card bg-light">
+        <h5 class="card-header">Tartışmaya katıl:</h5>
+        <div class="card-body">
+            <form class="mb-4" method="post" action="{% url 'article:addComment' article.id %}">
+                {% csrf_token %}
+                <textarea class="form-control" name="comment_content" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                <br>
+                <button type="submit" class="btn btn-primary">Yorum yap</button>
+            </form>
+        </div>
+    </div>
+</section>
+<hr>
+<h4>Yorumlar</h4>
+<hr>
+{% if comments %}
+
+    {% for comment in comments %}
+        <!-- Single comment-->
+        <div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+            <div class="media-body">
+                <h5 class="fw-bold">{{ comment.comment_author}}</h5>
+                {{ comment.comment_content }}<br>
+                <small>{{comment.comment_date}}</small>
+                <hr>
+            </div>
+        </div>
+    {% endfor %}
+
+{% else %}
+
+    <div class="alert alert-primary">Henüz yorum yok, tartışmayı başlatın.</div>
+{% endif %}
+
+{% endblock %}
+

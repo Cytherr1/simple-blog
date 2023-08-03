@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h3>Makaleler</h3>
+<hr>
+
+<div class="row justify-content-center">
+                        <div class="col-12 col-md-10 col-lg-8">
+                            <form class="card card-sm">
+                                <div class="card-body row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="fas fa-search h4 text-body"></i>
+                                    </div>
+                                    <form>
+                                        {% csrf_token %}
+                                        <!--end of col-->
+                                        <div class="col">
+                                            <input class="form-control form-control-lg form-control-borderless" type="search" name="keyword" placeholder="Search topics or keywords">
+                                        </div>
+                                        <!--end of col-->
+                                        <div class="col-auto">
+                                            <button class="btn btn-lg btn-primary" type="submit">Search</button>
+                                        </div>
+                                        <!--end of col-->
+                                    </form>
+                                </div>
+                            </form>
+                        </div>
+                        <!--end of col-->
+</div>
+<hr>
+<br>
+{% if articles %}
+
+        {% for article in articles %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Post content-->
+                <article>
+                    <!-- Post header-->
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <a href="{% url 'article:detail' article.id %}"><h1 class="fw-bolder mb-1">{{ article.title }}</h1></a>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2"> {{ article.author }} tarafından {{ article.created_date }} tarihinde oluşturuldu.</div>
+                        <hr>
+                    </header>
+                    <!-- Preview image figure-->
+                    {% if article.article_image %}
+                        <a href="{% url 'article:detail' article.id %}"><figure class="mb-4"><img class="img-fluid rounded" src="{{article.article_image.url}}" alt="..." /></figure></a>
+                    {% endif %}
+                    
+                    <!-- Post content-->
+                    <section class="mb-5">
+                        <p>
+                            <hr>
+                            {{ article.content|safe|truncatewords:50 }}
+                            <hr>
+                        </p>
+
+                        <small><a style="float: right;color: dimgray;" href="{% url 'article:detail' article.id %}">Devamını oku</a></small>
+                    </section>
+                </article>
+            </div>
+        </div>
+        {% endfor %}
+
+{% else %}
+<div class="alert alert-danger">
+    Bu blogda herhangi bir makale bulunmuyor.
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+
